@@ -6,19 +6,13 @@ use Data::Dumper;
 use DateTime;
 use POSIX qw(sleep);
 
-Getopt::Long::Configure("gnu_getopt");
-Getopt::Long::Configure("no_ignore_case");
-
 use constant { usage_string => "usage: shellyif.pl [-w|--watch] [-h|-?|--help] <host>\n    watch = repeat endlessly\n" };
 
 my($option_help) = 0;
 my($option_watch) = 0;
 
-my($result) = GetOptions
-(
-	"w|watch"	=> \$option_watch,
-	"h|?|help"  => \$option_help,
-);
+my($getopt) = Getopt::Long::Parser->new("config" => [ "gnu_getopt", "no_ignore_case" ]);
+$result = $getopt->getoptions("w|watch" => \$option_watch, "h|?|help"  => \$option_help);
 
 die(usage_string) if(!$result || $option_help);
 die(usage_string) if(scalar(@ARGV) eq 0);
