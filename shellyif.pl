@@ -1,6 +1,5 @@
 #!/usr/bin/perl -w
 
-use lib qw(/home/erik/bin);
 use Shelly::IF qw(data);
 use Getopt::Long;
 use Data::Dumper;
