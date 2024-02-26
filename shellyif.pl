@@ -32,12 +32,12 @@ if($option_watch)
 {
 	for(;;)
 	{
-		printf("%s\r", $shellyif->dump(1));
+		printf("%s\r", $shellyif->dump());
 		sleep(1);
 		die($shellyif->get_error()) if(!$shellyif->update());
 	}
 }
 else
 {
-	printf("%s\n", $shellyif->dump(1));
+	printf("%s\n", $shellyif->dump());
 }

@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use feature "signatures";
 
 use LWP::UserAgent;
 use JSON::Parse;
@@ -8,23 +9,19 @@ package Shelly::IF;
 
 use constant { model_plug_s => "plug-s", model_plug_plus_s => "plug-plus-s", model_pm_mini => "pm-mini" };
 
-sub _set_error($ $)
+sub _set_error($self, $error)
 {
-	my($self, $error) = @_;
 	$self->{"_error"} = sprintf("Shelly:IF: %s", $error);
 	return($self);
 }
 
-sub get_error($)
+sub get_error($self)
 {
-	my($self) = @_;
 	return($self->{"_error"});
 }
 
-sub _json($ $)
+sub _json($self, $json_string)
 {
-	my($self, $json_string) = @_;
-
 	$json_string =~ s/:null/:"NULL"/og;
 	$json_string =~ s/:false/:"FALSE"/og;
 	$json_string =~ s/:true/:"TRUE"/og;
@@ -40,9 +37,8 @@ sub _json($ $)
 	return(JSON::Parse::parse_json($json_string));
 }
 
-sub _get_json($ $)
+sub _get_json($self, $suburl)
 {
-	my($self, $suburl) = @_;
 	my($ua, $req, $res, $url);
 
 	$url = sprintf("http://%s/%s", $self->{"_host"}, $suburl);
@@ -59,9 +55,8 @@ sub _get_json($ $)
 	return($self->_json($res->decoded_content));
 }
 
-sub update($)
+sub update($self)
 {
-	my($self) = @_;
 	my($data);
 
 	if(!defined($self->{"_generation"}))
@@ -100,12 +95,11 @@ sub update($)
 	return(1);
 }
 
-sub new($ $)
+sub new($class, $host)
 {
-	my($class) = shift;
 	my($self) =
 	{
-		"_host" => shift,
+		"_host" => $host,
 	};
 	my($data);
 
@@ -166,27 +160,23 @@ sub new($ $)
 	return($self);
 }
 
-sub get_type($)
+sub get_type($self)
 {
-	my($self) = @_;
 	return($self->{"_type"});
 }
 
-sub get_type_string($)
+sub get_type_string($self)
 {
-	my($self) = @_;
 	return($self->{"_typestring"});
 }
 
-sub get_timestamp($)
+sub get_timestamp($self)
 {
-	my($self) = @_;
 	return($self->{"_timestamp"});
 }
 
-sub get_time_string($)
+sub get_time_string($self)
 {
-	my($self) = @_;
 	my($dt);
 
 	if($self->{"_generation"} == 1)
@@ -201,47 +191,38 @@ sub get_time_string($)
 	return(sprintf("%s %s", $dt->ymd, $dt->hms));
 }
 
-sub get_power($)
+sub get_power($self)
 {
-	my($self) = @_;
 	return($self->{"_power"});
 }
 
-sub get_voltage($)
+sub get_voltage($self)
 {
-	my($self) = @_;
 	return($self->{"_voltage"});
 }
 
-sub get_current($)
+sub get_current($self)
 {
-	my($self) = @_;
 	return($self->{"_current"});
 }
 
-sub get_temperature($)
+sub get_temperature($self)
 {
-	my($self) = @_;
 	return($self->{"_temperature"});
 }
 
-sub get_output($)
+sub get_output($self)
 {
-	my($self) = @_;
 	return($self->{"_output_name"});
 }
 
-sub dump_header($)
+sub dump_header($self)
 {
-	my($self) = @_;
-
 	return(sprintf("%-16s %-13s %-16s %6s %8s %7s %11s %s", "host", "type", "output", "power", "voltage", "current", "temperature", "time"));
 }
 
-sub dump($)
+sub dump($self)
 {
-	my($self) = @_;
-
 	return(sprintf("%-16s %-13s %-16s %6.1f %8.1f %7.1f %11.1f %s",
 			$self->{"_host"},
 			$self->get_type_string(),
