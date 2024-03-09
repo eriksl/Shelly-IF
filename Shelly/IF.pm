@@ -218,12 +218,12 @@ sub get_output($self)
 
 sub dump_header($self)
 {
-	return(sprintf("%-16s %-13s %-16s %6s %8s %7s %11s %s", "host", "type", "output", "power", "voltage", "current", "temperature", "time"));
+	return(sprintf("%-16s %-13s %-16s %8s %8s %7s %11s %s", "host", "type", "output", "power", "voltage", "current", "temperature", "time"));
 }
 
 sub dump($self)
 {
-	return(sprintf("%-16s %-13s %-16s %6.1f %8.1f %7.1f %11.1f %s",
+	return(sprintf("%-16s %-13s %-16s %8.1f %8.1f %7.1f %11.1f %s",
 			$self->{"_host"},
 			$self->get_type_string(),
 			$self->get_output(),
